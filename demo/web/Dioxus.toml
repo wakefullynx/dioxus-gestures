@@ -1,0 +1,4 @@
+[application]
+
+[web.app]
+base_path = "dioxus-gestures-demo"
