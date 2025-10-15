@@ -86,8 +86,6 @@ impl UseGestures {
     }
 }
 
-// W3C Draft Definitions: https://www.w3.org/TR/pointerevents/ , https://www.w3.org/TR/2025/WD-pointerevents4-20250501/ , https://www.w3.org/TR/pointerevents3/ , https://www.w3.org/TR/2025/CRD-pointerevents3-20250501/ , https://www.w3.org/TR/2019/REC-pointerevents2-20190404/
-//hover: https://drafts.csswg.org/selectors/#hover-pseudo
 pub fn use_gestures<'a>(props: Gestures) -> UseGestures {
     use_hook(|| UseGestures::from(props))
 }
