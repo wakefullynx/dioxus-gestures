@@ -1,8 +1,10 @@
 [package]
 name = "dioxus-gestures"
+description = "Drag, Pinch, and Hover gestures for dioxus components"
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/wakefullynx/dioxus-gestures"
+license = "MIT"
 
 [dependencies]
 dioxus = "0.6.3"
