@@ -1,0 +1,19 @@
+name: Cargo Publish
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  publish:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Publish
+      run: cargo publish --token ${{ SECRETS.CARGO_TOKEN }}
