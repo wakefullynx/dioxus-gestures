@@ -1,7 +1,8 @@
 use std::rc::Rc;
 
+use dioxus::prelude::Modifiers;
+use dioxus::html::point_interaction::{InteractionLocation, ModifiersInteraction, PointerInteraction};
 use dioxus::{
-    events::{InteractionLocation, Modifiers, ModifiersInteraction, PointerInteraction},
     html::{
         geometry::{euclid::Vector2D, ClientSpace},
         input_data::MouseButtonSet,
@@ -35,11 +36,11 @@ impl IncrementalOffsetPointer {
         PointerDataDifference::coordinates(&self.current_data, &self.preceding_data)
     }
 
-    pub fn delta_width(&self) -> i32 {
+    pub fn delta_width(&self) -> f64 {
         PointerDataDifference::width(&self.current_data, &self.preceding_data)
     }
 
-    pub fn delta_height(&self) -> i32 {
+    pub fn delta_height(&self) -> f64 {
         PointerDataDifference::height(&self.current_data, &self.preceding_data)
     }
 
@@ -81,11 +82,11 @@ impl IncrementalOffsetPointer {
         PointerDataDifference::coordinates(&self.current_data, &self.initial_data)
     }
 
-    pub fn offset_width(&self) -> i32 {
+    pub fn offset_width(&self) -> f64 {
         PointerDataDifference::width(&self.current_data, &self.initial_data)
     }
 
-    pub fn offset_height(&self) -> i32 {
+    pub fn offset_height(&self) -> f64 {
         PointerDataDifference::height(&self.current_data, &self.initial_data)
     }
 
@@ -132,11 +133,11 @@ impl OffsetPointer {
         PointerDataDifference::coordinates(&self.final_data, &self.initial_data)
     }
 
-    pub fn offset_width(&self) -> i32 {
+    pub fn offset_width(&self) -> f64 {
         PointerDataDifference::width(&self.final_data, &self.initial_data)
     }
 
-    pub fn offset_height(&self) -> i32 {
+    pub fn offset_height(&self) -> f64 {
         PointerDataDifference::height(&self.final_data, &self.initial_data)
     }
 
@@ -184,11 +185,11 @@ impl PointerDataDifference {
         a.client_coordinates() - b.client_coordinates()
     }
 
-    fn width(a: &PointerData, b: &PointerData) -> i32 {
+    fn width(a: &PointerData, b: &PointerData) -> f64 {
         a.width() - b.width()
     }
 
-    fn height(a: &PointerData, b: &PointerData) -> i32 {
+    fn height(a: &PointerData, b: &PointerData) -> f64 {
         a.height() - b.height()
     }
 

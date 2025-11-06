@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
-
-use dioxus::{events::InteractionLocation, html::PointerData};
+use dioxus::html::point_interaction::InteractionLocation;
+use dioxus::{html::PointerData};
 
 use crate::state::gestures::pointer::{IncrementalOffsetPointer, InitialPointer, OffsetPointer};
 
