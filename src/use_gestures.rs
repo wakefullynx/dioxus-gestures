@@ -1,10 +1,10 @@
-use dioxus_core::Event;
 use paste;
 use std::{cell::RefCell, rc::Rc};
 
 use dioxus::{
-    html::{PlatformEventData, PointerData},
-    prelude::{use_hook, Attribute, SuperInto},
+    html::{PlatformEventData},
+    prelude::{use_hook, Attribute},
+    core::{ListenerCallback},
 };
 
 use crate::state::{
@@ -37,39 +37,24 @@ impl From<Gestures> for UseGestures {
     }
 }
 
+
 impl UseGestures {
     pub fn event_handlers(self) -> Vec<Attribute> {
-        macro_rules! event_handler_attribute {
-            ($name:expr, $code:expr) => {{
-                let owner =
-                    <::generational_box::UnsyncStorage as ::generational_box::AnyStorage>::owner();
-                let event_handler: dioxus_core::prelude::EventHandler<
-                    dioxus_core::Event<PointerData>,
-                > = dioxus_core::prelude::with_owner(owner.clone(), || $code.super_into());
+
+        macro_rules! pointer_event_handler {
+            ($attribute_name: ident, $function_name: ident) => {{
+                let pointer_ref = Rc::clone(&self.state);
                 dioxus_core::Attribute::new(
-                    paste::paste! { stringify!([<$name:camel:lower>])},
-                    dioxus_core::AttributeValue::listener(
+                    paste::paste! { stringify!([<$attribute_name:camel:lower>])},
+                    dioxus_core::AttributeValue::Listener(
+                        ListenerCallback::new(
                         move |e: dioxus_core::Event<PlatformEventData>| {
-                            _ = &owner;
-                            event_handler.call(e.map(|e| e.into()));
-                        },
+                            let _ = pointer_ref.try_borrow_mut().map(|mut s| s.$function_name(e.map(|data| data.into())));
+                        }).erase()
                     ),
                     None,
                     false,
                 )
-            }};
-        }
-
-        macro_rules! pointer_event_handler {
-            ($attribute_name: ident, $function_name: ident) => {{
-                paste::paste! {
-                    let pointer_ref = Rc::clone(&self.state);
-                    event_handler_attribute!($attribute_name, move |event: Event<
-                        PointerData,
-                    >| {
-                        pointer_ref.borrow_mut().$function_name(event);
-                    })
-                }
             }};
         }
 

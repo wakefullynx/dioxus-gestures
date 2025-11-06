@@ -1,7 +1,8 @@
 use std::{cell::RefCell, rc::Rc};
 
+
+use dioxus::html::point_interaction::{InteractionElementOffset, InteractionLocation};
 use dioxus::{
-    events::{InteractionElementOffset, InteractionLocation},
     html::{
         geometry::{
             euclid::{Angle, Point2D, Vector2D},
