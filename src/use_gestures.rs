@@ -2,9 +2,9 @@ use paste;
 use std::{cell::RefCell, rc::Rc};
 
 use dioxus::{
-    html::{PlatformEventData},
+    core::{AttributeValue, Event, ListenerCallback},
+    html::PlatformEventData,
     prelude::{use_hook, Attribute},
-    core::{ListenerCallback},
 };
 
 use crate::state::{
@@ -37,20 +37,20 @@ impl From<Gestures> for UseGestures {
     }
 }
 
-
 impl UseGestures {
     pub fn event_handlers(self) -> Vec<Attribute> {
-
         macro_rules! pointer_event_handler {
             ($attribute_name: ident, $function_name: ident) => {{
                 let pointer_ref = Rc::clone(&self.state);
-                dioxus_core::Attribute::new(
+                Attribute::new(
                     paste::paste! { stringify!([<$attribute_name:camel:lower>])},
-                    dioxus_core::AttributeValue::Listener(
-                        ListenerCallback::new(
-                        move |e: dioxus_core::Event<PlatformEventData>| {
-                            let _ = pointer_ref.try_borrow_mut().map(|mut s| s.$function_name(e.map(|data| data.into())));
-                        }).erase()
+                    AttributeValue::Listener(
+                        ListenerCallback::new(move |e: Event<PlatformEventData>| {
+                            let _ = pointer_ref
+                                .try_borrow_mut()
+                                .map(|mut s| s.$function_name(e.map(|data| data.into())));
+                        })
+                        .erase(),
                     ),
                     None,
                     false,
