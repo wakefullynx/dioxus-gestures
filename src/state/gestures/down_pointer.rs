@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
+use dioxus::core::Event;
 use dioxus::html::PointerData;
-use dioxus_core::Event;
 
 use crate::state::{
     events::PointerEventReceiver,
