@@ -11,3 +11,5 @@ dioxus = "0.7.1"
 dioxus-core = "0.7.1"
 generational-box = "0.7.1"
 paste = "1.0.15"
+nanoid = "0.4.0"
+getrandom = { version = "0.2.16", features = ["js"] }

@@ -1,10 +1,11 @@
+use dioxus_core::AttributeValue;
 use paste;
 use std::{cell::RefCell, rc::Rc};
 
 use dioxus::{
-    html::{PlatformEventData},
+    core::ListenerCallback,
+    html::PlatformEventData,
     prelude::{use_hook, Attribute},
-    core::{ListenerCallback},
 };
 
 use crate::state::{
@@ -37,20 +38,20 @@ impl From<Gestures> for UseGestures {
     }
 }
 
-
 impl UseGestures {
     pub fn event_handlers(self) -> Vec<Attribute> {
-
         macro_rules! pointer_event_handler {
             ($attribute_name: ident, $function_name: ident) => {{
                 let pointer_ref = Rc::clone(&self.state);
                 dioxus_core::Attribute::new(
                     paste::paste! { stringify!([<$attribute_name:camel:lower>])},
                     dioxus_core::AttributeValue::Listener(
-                        ListenerCallback::new(
-                        move |e: dioxus_core::Event<PlatformEventData>| {
-                            let _ = pointer_ref.try_borrow_mut().map(|mut s| s.$function_name(e.map(|data| data.into())));
-                        }).erase()
+                        ListenerCallback::new(move |e: dioxus_core::Event<PlatformEventData>| {
+                            let _ = pointer_ref
+                                .try_borrow_mut()
+                                .map(|mut s| s.$function_name(e.map(|data| data.into())));
+                        })
+                        .erase(),
                     ),
                     None,
                     false,
@@ -58,7 +59,15 @@ impl UseGestures {
             }};
         }
 
+        let target_unique_id = self.state.borrow().target_unique_id.to_string();
+
         vec![
+            Attribute::new(
+                "data-gestures-id",
+                AttributeValue::Text(target_unique_id),
+                None,
+                false,
+            ),
             pointer_event_handler!(on_pointer_over, pointer_over),
             pointer_event_handler!(on_pointer_enter, pointer_enter),
             pointer_event_handler!(on_pointer_down, pointer_down),
