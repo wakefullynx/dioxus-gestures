@@ -1,4 +1,5 @@
-use dioxus::{html::PointerData, prelude::Event};
+use dioxus::{document, html::PointerData, prelude::Event};
+use nanoid::nanoid;
 
 use crate::state::{
     events::PointerEventReceiver,
@@ -13,6 +14,7 @@ use crate::state::{
 
 #[derive(Clone)]
 pub struct UseGesturesState {
+    pub target_unique_id: String,
     external: ExternalHandlers,
     hover: HoverGestureState,
     down_pointer: DownPointerGestureState,
@@ -20,11 +22,33 @@ pub struct UseGesturesState {
 
 impl UseGesturesState {
     pub fn new(external: ExternalHandlers, hover: Hover, drag: Drag, pinch: Pinch) -> Self {
+        let target_unique_id = nanoid!();
         Self {
+            target_unique_id: target_unique_id.clone(),
             external,
             hover: HoverGestureState::new(hover),
             down_pointer: DownPointerGestureState::new(drag, pinch),
         }
+    }
+}
+
+impl UseGesturesState {
+    fn set_pointer_capture(&self, pointer_id: i32) {
+        let target_unique_id = &self.target_unique_id;
+        document::eval(&format!(
+            r#"document.querySelector("*[data-gestures-id='{target_unique_id}']").setPointerCapture({:?})"#,
+            pointer_id
+        ));
+    }
+}
+
+impl UseGesturesState {
+    fn release_pointer_capture(&self, pointer_id: i32) {
+        let target_unique_id = &self.target_unique_id;
+        document::eval(&format!(
+            r#"document.querySelector("*[data-gestures-id='{target_unique_id}']").releasePointerCapture("{:?}")"#,
+            pointer_id
+        ));
     }
 }
 
@@ -42,6 +66,8 @@ impl PointerEventReceiver<Event<PointerData>> for UseGesturesState {
     }
 
     fn pointer_down(&mut self, event: Event<PointerData>) {
+        self.set_pointer_capture(event.pointer_id());
+
         self.hover.pointer_down(&event);
         self.down_pointer.pointer_down(&event);
         self.external.pointer_down(event);
@@ -54,12 +80,16 @@ impl PointerEventReceiver<Event<PointerData>> for UseGesturesState {
     }
 
     fn pointer_up(&mut self, event: Event<PointerData>) {
+        self.release_pointer_capture(event.pointer_id());
+
         self.hover.pointer_up(&event);
         self.down_pointer.pointer_up(&event);
         self.external.pointer_up(event);
     }
 
     fn pointer_cancel(&mut self, event: Event<PointerData>) {
+        self.release_pointer_capture(event.pointer_id());
+
         self.hover.pointer_cancel(&event);
         self.down_pointer.pointer_cancel(&event);
         self.external.pointer_cancel(event);

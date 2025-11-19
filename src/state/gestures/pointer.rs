@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::rc::Rc;
 
 use dioxus::prelude::Modifiers;
@@ -22,6 +23,12 @@ impl PointerId {
 impl From<i32> for PointerId {
     fn from(value: i32) -> Self {
         PointerId(value)
+    }
+}
+
+impl Debug for PointerId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 

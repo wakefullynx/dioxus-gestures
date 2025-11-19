@@ -58,7 +58,15 @@ impl UseGestures {
             }};
         }
 
+        let target_unique_id = self.state.borrow().target_unique_id.to_string();
+
         vec![
+            Attribute::new(
+                "data-gestures-id",
+                AttributeValue::Text(target_unique_id),
+                None,
+                false,
+            ),
             pointer_event_handler!(on_pointer_over, pointer_over),
             pointer_event_handler!(on_pointer_enter, pointer_enter),
             pointer_event_handler!(on_pointer_down, pointer_down),
