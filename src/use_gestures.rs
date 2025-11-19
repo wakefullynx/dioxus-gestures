@@ -1,9 +1,8 @@
-use dioxus_core::AttributeValue;
 use paste;
 use std::{cell::RefCell, rc::Rc};
 
 use dioxus::{
-    core::ListenerCallback,
+    core::{AttributeValue, Event, ListenerCallback},
     html::PlatformEventData,
     prelude::{use_hook, Attribute},
 };
@@ -43,10 +42,10 @@ impl UseGestures {
         macro_rules! pointer_event_handler {
             ($attribute_name: ident, $function_name: ident) => {{
                 let pointer_ref = Rc::clone(&self.state);
-                dioxus_core::Attribute::new(
+                Attribute::new(
                     paste::paste! { stringify!([<$attribute_name:camel:lower>])},
-                    dioxus_core::AttributeValue::Listener(
-                        ListenerCallback::new(move |e: dioxus_core::Event<PlatformEventData>| {
+                    AttributeValue::Listener(
+                        ListenerCallback::new(move |e: Event<PlatformEventData>| {
                             let _ = pointer_ref
                                 .try_borrow_mut()
                                 .map(|mut s| s.$function_name(e.map(|data| data.into())));

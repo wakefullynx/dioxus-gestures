@@ -1,5 +1,4 @@
-use dioxus::{html::PointerData, prelude::EventHandler};
-use dioxus_core::Event;
+use dioxus::{core::Event, html::PointerData, prelude::EventHandler};
 
 use crate::state::events::PointerEventReceiver;
 
