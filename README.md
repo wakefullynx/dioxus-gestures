@@ -4,9 +4,9 @@ Demo: https://wakefullynx.dev/dioxus-gestures-demo/
 
 Please note: This crate is in early development and may contain bugs and missing implementations. Currently only tested in `web`.
 
-[`Drag`]: https://docs.rs/dioxus_gestures/latest/state/gestures/drag/struct.Drag
-[`Pinch`]: https://docs.rs/dioxus_gestures/latest/state/gestures/pinch/struct.Pinch
-[`Hover`]: https://docs.rs/dioxus_gestures/latest/state/gestures/hover/struct.Hover
+[`Drag`]: https://docs.rs/dioxus_gestures/latest/dioxus_gestures/state/gestures/drag/struct.Drag.html
+[`Pinch`]: https://docs.rs/dioxus_gestures/latest/dioxus_gestures/state/gestures/pinch/struct.Pinch.html
+[`Hover`]: https://docs.rs/dioxus_gestures/latest/dioxus_gestures/state/gestures/hover/struct.Hover.html
 
 W3C Drafts and applicable documents:
 * https://www.w3.org/TR/pointerevents/
