@@ -53,7 +53,7 @@ impl UseGestures {
                         .erase(),
                     ),
                     None,
-                    false,
+                    true,
                 )
             }};
         }
@@ -65,7 +65,7 @@ impl UseGestures {
                 "data-gestures-id",
                 AttributeValue::Text(target_unique_id),
                 None,
-                false,
+                true,
             ),
             pointer_event_handler!(on_pointer_over, pointer_over),
             pointer_event_handler!(on_pointer_enter, pointer_enter),
