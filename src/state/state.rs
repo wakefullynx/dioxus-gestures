@@ -1,5 +1,4 @@
 use dioxus::{document, html::PointerData, prelude::Event};
-use nanoid::nanoid;
 
 use crate::state::{
     events::PointerEventReceiver,
@@ -10,44 +9,50 @@ use crate::state::{
         hover::{Hover, HoverGestureState},
         pinch::Pinch,
     },
+    options::UseGesturesOptions,
 };
 
 #[derive(Clone)]
 pub struct UseGesturesState {
-    pub target_unique_id: String,
     external: ExternalHandlers,
     hover: HoverGestureState,
     down_pointer: DownPointerGestureState,
+    pub options: UseGesturesOptions,
 }
 
 impl UseGesturesState {
-    pub fn new(external: ExternalHandlers, hover: Hover, drag: Drag, pinch: Pinch) -> Self {
-        let target_unique_id = nanoid!();
+    pub fn new(
+        external: ExternalHandlers,
+        hover: Hover,
+        drag: Drag,
+        pinch: Pinch,
+        options: UseGesturesOptions,
+    ) -> Self {
         Self {
-            target_unique_id: target_unique_id.clone(),
             external,
             hover: HoverGestureState::new(hover),
             down_pointer: DownPointerGestureState::new(drag, pinch),
+            options,
         }
     }
 }
 
 impl UseGesturesState {
     fn set_pointer_capture(&self, pointer_id: i32) {
-        let target_unique_id = &self.target_unique_id;
+        let target_id_attribute_name = &self.options.target_id_attribute_name;
+        let target_id = &self.options.target_id;
         document::eval(&format!(
-            r#"document.querySelector("*[data-gestures-id='{target_unique_id}']").setPointerCapture({:?})"#,
-            pointer_id
+            r#"document.querySelector("*[{target_id_attribute_name}='{target_id}']").setPointerCapture({pointer_id})"#,
         ));
     }
 }
 
 impl UseGesturesState {
     fn release_pointer_capture(&self, pointer_id: i32) {
-        let target_unique_id = &self.target_unique_id;
+        let target_id_attribute_name = &self.options.target_id_attribute_name;
+        let target_id = &self.options.target_id;
         document::eval(&format!(
-            r#"document.querySelector("*[data-gestures-id='{target_unique_id}']").releasePointerCapture("{:?}")"#,
-            pointer_id
+            r#"document.querySelector("*[{target_id_attribute_name}='{target_id}']").releasePointerCapture({pointer_id})"#,
         ));
     }
 }
