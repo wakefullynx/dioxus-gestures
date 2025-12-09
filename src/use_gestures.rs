@@ -9,7 +9,7 @@ use dioxus::{
 
 use crate::state::{
     events::PointerEventReceiver,
-    gestures::{drag::Drag, hover::Hover, pinch::Pinch},
+    gestures::{drag::Drag, hover::Hover, pinch::Pinch}, options::UseGesturesOptions,
 };
 use crate::state::{external_handlers::ExternalHandlers, state::UseGesturesState};
 
@@ -25,6 +25,7 @@ impl From<Gestures> for UseGestures {
             hover,
             drag,
             pinch,
+            options
         } = value;
         Self {
             state: Rc::new(RefCell::new(UseGesturesState::new(
@@ -32,6 +33,7 @@ impl From<Gestures> for UseGestures {
                 hover,
                 drag,
                 pinch,
+                options
             ))),
         }
     }
@@ -58,12 +60,10 @@ impl UseGestures {
             }};
         }
 
-        let target_unique_id = self.state.borrow().target_unique_id.to_string();
-
         vec![
             Attribute::new(
-                "data-gestures-id",
-                AttributeValue::Text(target_unique_id),
+                self.state.borrow().options.target_id_attribute_name,
+                AttributeValue::Text(self.state.borrow().options.target_id.to_string()),
                 None,
                 true,
             ),
@@ -89,6 +89,7 @@ pub struct Gestures {
     pub hover: Hover,
     pub drag: Drag,
     pub pinch: Pinch,
+    pub options: UseGesturesOptions
 }
 
 impl Gestures {
@@ -109,6 +110,11 @@ impl Gestures {
 
     pub fn pinch(mut self, pinch: Pinch) -> Self {
         self.pinch = pinch;
+        self
+    }
+
+    pub fn options(mut self, options: UseGesturesOptions) -> Self {
+        self.options = options;
         self
     }
 }
