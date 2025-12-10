@@ -1,27 +1,15 @@
 [workspace]
 resolver = "2"
 members = [
-    "ui",
-    "web",
-    "desktop",
-    "mobile",
+    "packages/ui",
+    "packages/web",
+    "packages/desktop",
+    "packages/mobile",
 ]
 
 [workspace.dependencies]
-dioxus = { version = "0.7.2" }
+dioxus = { version = "0.7.2", features = ["fullstack"] }
 
 # workspace
-ui = { path = "ui" }
-
-[profile]
-
-[profile.wasm-dev]
-inherits = "dev"
-opt-level = 1
-
-[profile.server-dev]
-inherits = "dev"
-
-[profile.android-dev]
-inherits = "dev"
+ui = { path = "packages/ui" }
 

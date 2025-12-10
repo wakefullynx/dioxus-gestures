@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-use ui::Hero;
+use ui::Example;
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
 
@@ -16,7 +16,7 @@ fn App() -> Element {
         // Global app resources
         document::Link { rel: "stylesheet", href: MAIN_CSS }
 
-        Hero {}
+        Example {}
 
     }
 }
