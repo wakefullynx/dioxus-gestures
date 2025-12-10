@@ -7,7 +7,8 @@ repository = "https://github.com/wakefullynx/dioxus-gestures"
 license = "MIT"
 
 [dependencies]
-dioxus = "0.7.2"
+dioxus = { version = "0.7.2", features = ["fullstack"] }
 paste = "1.0.15"
 nanoid = "0.4.0"
 getrandom = { version = "0.2.16", features = ["js"] }
+

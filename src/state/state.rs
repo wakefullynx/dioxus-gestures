@@ -14,14 +14,16 @@ use crate::state::{
 
 #[derive(Clone)]
 pub struct UseGesturesState {
+    pub target_id: String,
+    pub options: UseGesturesOptions,
     external: ExternalHandlers,
     hover: HoverGestureState,
     down_pointer: DownPointerGestureState,
-    pub options: UseGesturesOptions,
 }
 
 impl UseGesturesState {
     pub fn new(
+        target_id: String,
         external: ExternalHandlers,
         hover: Hover,
         drag: Drag,
@@ -29,6 +31,7 @@ impl UseGesturesState {
         options: UseGesturesOptions,
     ) -> Self {
         Self {
+            target_id,
             external,
             hover: HoverGestureState::new(hover),
             down_pointer: DownPointerGestureState::new(drag, pinch),
@@ -40,7 +43,7 @@ impl UseGesturesState {
 impl UseGesturesState {
     fn set_pointer_capture(&self, pointer_id: i32) {
         let target_id_attribute_name = &self.options.target_id_attribute_name;
-        let target_id = &self.options.target_id;
+        let target_id = &self.target_id;
         document::eval(&format!(
             r#"document.querySelector("*[{target_id_attribute_name}='{target_id}']").setPointerCapture({pointer_id})"#,
         ));
@@ -50,7 +53,7 @@ impl UseGesturesState {
 impl UseGesturesState {
     fn release_pointer_capture(&self, pointer_id: i32) {
         let target_id_attribute_name = &self.options.target_id_attribute_name;
-        let target_id = &self.options.target_id;
+        let target_id = &self.target_id;
         document::eval(&format!(
             r#"document.querySelector("*[{target_id_attribute_name}='{target_id}']").releasePointerCapture({pointer_id})"#,
         ));

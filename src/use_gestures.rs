@@ -1,15 +1,17 @@
+use nanoid::nanoid;
 use paste;
 use std::{cell::RefCell, rc::Rc};
 
 use dioxus::{
     core::{AttributeValue, Event, ListenerCallback},
     html::PlatformEventData,
-    prelude::{use_hook, Attribute},
+    prelude::{use_hook, use_server_cached, Attribute},
 };
 
 use crate::state::{
     events::PointerEventReceiver,
-    gestures::{drag::Drag, hover::Hover, pinch::Pinch}, options::UseGesturesOptions,
+    gestures::{drag::Drag, hover::Hover, pinch::Pinch},
+    options::UseGesturesOptions,
 };
 use crate::state::{external_handlers::ExternalHandlers, state::UseGesturesState};
 
@@ -18,28 +20,27 @@ pub struct UseGestures {
     state: Rc<RefCell<UseGesturesState>>,
 }
 
-impl From<Gestures> for UseGestures {
-    fn from(value: Gestures) -> Self {
+impl UseGestures {
+    pub fn new(target_id: String, config: Gestures) -> Self {
         let Gestures {
             external_handlers,
             hover,
             drag,
             pinch,
-            options
-        } = value;
+            options,
+        } = config;
         Self {
             state: Rc::new(RefCell::new(UseGesturesState::new(
+                target_id,
                 external_handlers,
                 hover,
                 drag,
                 pinch,
-                options
+                options,
             ))),
         }
     }
-}
 
-impl UseGestures {
     pub fn event_handlers(self) -> Vec<Attribute> {
         macro_rules! pointer_event_handler {
             ($attribute_name: ident, $function_name: ident) => {{
@@ -55,7 +56,7 @@ impl UseGestures {
                         .erase(),
                     ),
                     None,
-                    true,
+                    false,
                 )
             }};
         }
@@ -63,9 +64,9 @@ impl UseGestures {
         vec![
             Attribute::new(
                 self.state.borrow().options.target_id_attribute_name,
-                AttributeValue::Text(self.state.borrow().options.target_id.to_string()),
+                AttributeValue::Text(self.state.borrow().target_id.clone()),
                 None,
-                true,
+                false,
             ),
             pointer_event_handler!(on_pointer_over, pointer_over),
             pointer_event_handler!(on_pointer_enter, pointer_enter),
@@ -80,7 +81,9 @@ impl UseGestures {
 }
 
 pub fn use_gestures<'a>(props: Gestures) -> UseGestures {
-    use_hook(|| UseGestures::from(props))
+    let target_id =
+        use_server_cached(|| props.options.target_id.clone().unwrap_or_else(|| nanoid!()));
+    use_hook(|| UseGestures::new(target_id, props))
 }
 
 #[derive(Default)]
@@ -89,7 +92,7 @@ pub struct Gestures {
     pub hover: Hover,
     pub drag: Drag,
     pub pinch: Pinch,
-    pub options: UseGesturesOptions
+    pub options: UseGesturesOptions,
 }
 
 impl Gestures {
