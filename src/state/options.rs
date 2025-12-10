@@ -1,5 +1,3 @@
-use nanoid::nanoid;
-
 #[derive(Clone)]
 pub struct UseGesturesOptions {
     pub target_id_attribute_name: &'static str,
