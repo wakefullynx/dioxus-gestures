@@ -5,8 +5,11 @@ use std::{cell::RefCell, rc::Rc};
 use dioxus::{
     core::{AttributeValue, Event, ListenerCallback},
     html::PlatformEventData,
-    prelude::{use_hook, use_server_cached, Attribute},
+    prelude::{use_hook, Attribute},
 };
+
+#[cfg(feature = "fullstack")]
+use dioxus::prelude::use_server_cached;
 
 use crate::state::{
     events::PointerEventReceiver,
@@ -81,8 +84,14 @@ impl UseGestures {
 }
 
 pub fn use_gestures<'a>(props: Gestures) -> UseGestures {
+    #[cfg(not(feature = "fullstack"))]
+    let target_id =
+        use_hook(|| props.options.target_id.clone().unwrap_or_else(|| nanoid!()));
+
+    #[cfg(feature = "fullstack")]
     let target_id =
         use_server_cached(|| props.options.target_id.clone().unwrap_or_else(|| nanoid!()));
+        
     use_hook(|| UseGestures::new(target_id, props))
 }
 
