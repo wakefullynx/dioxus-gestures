@@ -83,7 +83,7 @@ impl UseGestures {
     }
 }
 
-pub fn use_gestures<'a>(props: Gestures) -> UseGestures {
+pub fn use_gestures(props: Gestures) -> UseGestures {
     #[cfg(not(feature = "fullstack"))]
     let target_id =
         use_hook(|| props.options.target_id.clone().unwrap_or_else(|| nanoid!()));

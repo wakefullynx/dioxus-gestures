@@ -2,7 +2,7 @@
 
 Demo: https://wakefullynx.dev/dioxus-gestures-demo/
 
-Please note: This crate is in early development and may contain bugs and missing implementations. Currently only tested in `web`. Feature `fullstack` must be enabled in the Dioxus dependency.
+Please note: This crate is in early development and may contain bugs and missing implementations. Currently only tested on the `Web` platform. If you are using fullstack, you *must* also enable the fullstack feature of `dioxus-gestures`.
 
 [`Drag`]: https://docs.rs/dioxus_gestures/latest/dioxus_gestures/state/gestures/drag/struct.Drag.html
 [`Pinch`]: https://docs.rs/dioxus_gestures/latest/dioxus_gestures/state/gestures/pinch/struct.Pinch.html
