@@ -1,0 +1,49 @@
+body {
+  background-color: #0f1116;
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+.examples {
+  display: flex;
+  flex-direction: column;
+}
+
+.target {
+  border-radius: 1em;
+  text-align: center;
+  font-size: 2em;
+  padding: 100px;
+  display: inline-block;
+  width: 10%;
+  min-width: 8em;
+  margin: 1em;
+  opacity: 1;
+  transition: filter 0.25s;
+}
+
+.target:hover {
+  cursor: pointer;
+  filter: brightness(1.25);
+}
+
+.target:focus {
+  background-color: #fff;
+}
+
+.hover {
+  background-color: #e80;
+  color: #fff;
+}
+
+.drag {
+  background-color: #a0a;
+  color: #fff;
+}
+
+.pinch {
+  background-color: #08e;
+  color: #fff;
+}
